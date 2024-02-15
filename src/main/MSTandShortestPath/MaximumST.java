@@ -55,7 +55,7 @@ public class MaximumST {
             int s = e.either();
             int t = e.other(s);
             if (!inT[s] || !inT[t]) {
-                int curV = 0;
+                int curV;
                 if (!inT[s]) {
                     curV = s;
                 } else {
@@ -87,8 +87,7 @@ public class MaximumST {
         compute();
         assert edgeTo != null;
         Queue<Edge> maximumst = new Queue<>();
-        for (int i = 0; i < edgeTo.length; i ++) {
-            Edge e = edgeTo[i];
+        for (Edge e : edgeTo) {
             if (e != null) {
                 maximumst.enqueue(e);
             }
