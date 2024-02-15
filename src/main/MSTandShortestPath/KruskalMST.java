@@ -21,6 +21,7 @@ public class KruskalMST {
     private double weight;
 
     public KruskalMST(EdgeWeightedGraph g, UF uf) {
+        if (g.V() != uf.n) throw new IllegalArgumentException("UF's n is different from graph's V");
         this.g = g;
         this.uf = uf;
     }

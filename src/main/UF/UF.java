@@ -1,7 +1,7 @@
 package main.UF;
 
 public abstract class UF {
-    protected int n;
+    public final int n;
     protected UF(int n) {
         this.n = n;
     }
