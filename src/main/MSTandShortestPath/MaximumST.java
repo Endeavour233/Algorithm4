@@ -8,7 +8,7 @@ import edu.princeton.cs.algs4.Queue;
 import java.util.PriorityQueue;
 
 /**
- * use lazyprim to compute maximum-weight spanning tree
+ * use lazyprim to compute maximum-weight spanning forest
  */
 public class MaximumST {
 
@@ -48,6 +48,7 @@ public class MaximumST {
             }
         });
         for (Edge e:g.adj(v)) {
+            // to be compatible with parallel edge
             if (!inT[e.other(v)]) {
                 pq.add(e);
             }

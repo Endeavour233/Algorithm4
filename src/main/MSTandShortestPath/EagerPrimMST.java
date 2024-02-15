@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 /**
  * need distinct weight?
+ * compute minimum spanning forest
  */
 public class EagerPrimMST {
 

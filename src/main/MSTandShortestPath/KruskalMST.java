@@ -11,7 +11,9 @@ import main.UF.UF2;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
-
+/**
+ * compatible with unconnected graph: compute minimum spanning forest
+ */
 public class KruskalMST {
     private final EdgeWeightedGraph g;
     private final UF uf;
@@ -59,8 +61,8 @@ public class KruskalMST {
 
     public static void main(String[] args) {
         EdgeWeightedGraph g = new EdgeWeightedGraph(new In(args[0]));
-        UF uf1 = new UF2(g.V());
-        KruskalMST mst = new KruskalMST(g, uf1);
+        UF uf = new UF2(g.V());
+        KruskalMST mst = new KruskalMST(g, uf);
         for (Edge e: mst.edges()) {
             System.out.println(e);
         }
