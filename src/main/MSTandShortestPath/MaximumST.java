@@ -48,10 +48,7 @@ public class MaximumST {
             }
         });
         for (Edge e:g.adj(v)) {
-            // to be compatible with parallel edge
-            if (!inT[e.other(v)]) {
-                pq.add(e);
-            }
+            pq.add(e);
         }
         while (!pq.isEmpty()) {
             Edge e = pq.poll();
