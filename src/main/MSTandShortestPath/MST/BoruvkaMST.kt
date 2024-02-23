@@ -1,4 +1,4 @@
-package main.MSTandShortestPath
+package main.MSTandShortestPath.MST
 
 import edu.princeton.cs.algs4.Edge
 import edu.princeton.cs.algs4.EdgeWeightedGraph

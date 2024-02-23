@@ -4,11 +4,10 @@ import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.EdgeWeightedGraph;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Queue;
-import main.MSTandShortestPath.MaximumST;
+import main.MSTandShortestPath.MST.MaximumST;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class FeedbackSet {
 
