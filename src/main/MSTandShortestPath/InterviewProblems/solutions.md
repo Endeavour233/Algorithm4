@@ -40,3 +40,39 @@ time complexity: O(V + E) to get the complement of maximum-weight spanning tree 
 ## Implementation
 [FeedbackSet](FeedbackSet.java)
 
+# Monotonic shortest path
+Given an edge-weighted digraph, find a monotonic shortest path from s to every other vertex. A path is monotonic if the weight of every edge on the path is either strictly increasing or strictly decreasing.
+## algorithm
+find the shortest ascending path and descending path. choose the shorter one.
+how to find the shortest ascending path?
+let `dist[i,v]` be the length of shortest ascending path consisting of at most i edges, then
+ 
+
+# Second Shortest Path
+Given an edge-weighted digraph and let P be a shortest path from vertex s to vertex t. Design an ElogV algorithm to find a path (not necessarily simple) other than P from s to t that is as short as possible. Assume all of the edge weights are strictly positive.
+## Algorithm
+1. compute the shortest path from s to any other vertex
+2. compute the shortest path from every other vertex to t
+3. based on the shortest paths computed, for each edge u -> v not in P, compute the shortest path from s to t containing u -> v, that is shortest(s -> u) + u -> v + shortest(v -> t). Among all these paths, the shortest one is what we want.
+## Correctness
+prop: P is a simple path
+proof: Suppose that P contains at least one cycle, then it must be positive. remove this cycle, we get a new path the length of which is strictly less than P. contradict to the fact that P is the shortest path.
+
+prop:if P is a simple path, a path T from s to t is not P iff it contains at least one edge not in P
+proof:
+<-: obvious
+->: suppose that T consists of edges in P(e0, e1, e2, ..., ep)
+1) it uses some edges in P repeatedly: T: ...,ei, ...ej, ei, ... then there is a ej in P the endpoint of which is the same as the startpoint of some other edge ei in P. it follows that P has a cycle, contradict to the fact that P is simple.
+2) it's a permutation of edges in P: T:(e0',e1', ..., ep'). let et' be the first edge in T different from P. et' = ej(j > t). then the startpoint of ej is the same as the startpoint of et. thus, the endpoint of e_{j-1} is the same as the startpoint of et. it follows that there is a cycle in P, contradict.\
+3) it removes some edges in P: P is simple. after removing some edges, s is not connected to t. contradict.
+Therefore, T contains at least one edge not in P
+
+To find the shortest one among edges from s to t other than P is actually to find the shortest one among edges from s to t containing at least one edge not in P, i.e. shortest_{e not in P}(shortest_{T contains e}(T))
+
+## Performance
+for positive edge graph, use dijkstra, step 1 takes O((V + E)logV); in step 2, we reverse the graph and run dijkstra, it takes O(V + E + (V + E)logV); step 3 takes O(E). the total time complexity is O(ElogV).
+
+## Implementation
+[SecondShortestPath](SecondShortestPath.java)
+
+
