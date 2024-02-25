@@ -9,9 +9,16 @@ public class SkipOneEdgePath {
     private Queue<DirectedEdge> path;
     private double distance = Double.POSITIVE_INFINITY;
     public SkipOneEdgePath(EdgeWeightedDigraph g, int s, int t) {
+        if (s == t) {
+            path = new Queue<>();
+            distance = 0;
+            return;
+        }
         // find the shortest path from s to every other vertex
         DijkstraSSSP spFromS = new DijkstraSSSP(g, s);
-        if (!spFromS.hasPathTo(t)) throw new IllegalArgumentException("t is not reachable from s!");
+        if (!spFromS.hasPathTo(t)) {
+            return;
+        }
         HashMap<DirectedEdge, DirectedEdge> edgeMap = new HashMap<>();
         EdgeWeightedDigraph revG = new EdgeWeightedDigraph(g.V());
         for (DirectedEdge edge:g.edges()) {
@@ -53,6 +60,10 @@ public class SkipOneEdgePath {
         }
     }
 
+    /**
+     * the shortest path from s to t after changing the weight of one edge to 0
+     * @return {@code null} if t is not reachable from s
+     */
     public Iterable<DirectedEdge> getPath() {
         if (path == null) return null;
         Queue<DirectedEdge> result = new Queue<>();
@@ -62,6 +73,10 @@ public class SkipOneEdgePath {
         return result;
     }
 
+    /**
+     * the length of the shortest path from s to t after changing the weight of one edge to 0
+     * @return {@code infinity} if t is not reachable from s
+     */
     public double getDist() {
         return distance;
     }
@@ -70,11 +85,11 @@ public class SkipOneEdgePath {
         EdgeWeightedDigraph g = new EdgeWeightedDigraph(new In(args[0]));
         int s = Integer.parseInt(args[1]);
         int t = Integer.parseInt(args[2]);
-        System.out.println("second shortest path:");
+        System.out.println("skip one edge path:");
         SkipOneEdgePath ssp = new SkipOneEdgePath(g, s, t);
         Iterable<DirectedEdge> path = ssp.getPath();
         if (path == null) {
-            System.out.print("not exist");
+            System.out.print(t + "is not reachable from " + s);
         } else {
             for (DirectedEdge e:ssp.getPath()) {
                 System.out.print(e + " ");
