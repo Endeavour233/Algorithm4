@@ -75,4 +75,32 @@ for positive edge graph, use dijkstra, step 1 takes O((V + E)logV); in step 2, w
 ## Implementation
 [SecondShortestPath](SecondShortestPath.java)
 
+# Shortest path with one skippable edge
+Given an edge-weighted digraph, design an ElogV algorithm to find a shortest path from s to t where you can change the weight of any one edge to zero. Assume the edge weights are non-negative.
+## Algorithm
+for each edge, find the shortest path skipping it. Among all these shortest paths, the shortest one is the solution.
+to find the shortest path skipping a specific edge u -> v, we need to compute the shortest path from s to u and the shortest path from v to t, which can be achieved by running dijkstra(g, s) and dijkstra(reversedG, t)
+## Correctness
+we want to find min_{e in E}(shortestDist_{weight(e) = 0}(T is a path from s to t))
+
+shortestDist_{weight(e) = w}(T is a path from s to t) ::= the length of the shortest path from s to t given weight(e) = w.
+
+shortestDist_{weight(e) = 0}(T is a path from s to t) = min(shortestDist_{weight(e) = 0}(T is a path from s to t containing e), shortestDist_{weight(e) = 0}(T is a path from s to t not containing e))
+
+denote the original weight of e with w_e, then shortDist_{weight(e) = 0}(T is a path from s to t containing e)(1) = shortestDist_{weight(e) = w_e}(T is a path from s to t containing e) - w_e; shortestDist_{weight(e) = 0}(T is a path from s to t not containing e)(2) = shortestDist_{weight(e) = w_e}(T is a path from s to t not containing e).
+
+if there is a path not containing e the shortest path from s to t when weight(e) = w_e, then (2) = shortestDist_{weight(e) = w_e}(T is a path from s to t)(3) -> min((1),(2)) = min((1),(3))
+
+otherwise, there must be a path containing e the shortest path when weight(e) = w_e, i.e. (1) = (3) - w_e <= (3). Meanwhile, (2) > (3). -> min((1),(2)) = (1) = min((1),(3))
+
+that is, shortestDist_{weight(e) = 0}(T is a path from s to t) = min((1),(2)) = min((1),(3)) = min(shortestDist_{weight(e) = 0}(T is a path from s to t containing e), shortestDist_{original graph}(T is a path from s to t)(denote with originalShortest)).
+
+Thus, what we want: min_{e in E}(shortestDist_{weight(e) = 0}(T is a path from s to t)) = min_{e in E}(min(shortestDist_{weight(e) = 0}(T is a path from s to t containing e), originalShortest)) = min(min_{e in E}(shortest_{weight(e) = 0}(T is a path containing e from s to t))(4), originalShortest)
+
+the original shortest path from s to t must contain some edge e*. That is, originalShortest = shortestDist_{weight(e*)=w_e*}(T is a path from s to t containing e*) = shortestDist_{weight(e*) = 0}(T is a path from s to t containing e*) + w_e* >= shortestDist_{weight(e*) = 0}(T is a path containing e* from s to t)(5). And obviously, (4) <= (5). Finally, we get that what we want = min((4), originalDist) = (4) = min_{e in E}(shortest_{weight(e) = 0}(T is a path containing e from s to t))
+
+## Implementation
+[SkipOneEdgePath](SkipOneEdgePath.java)
+
+
 
