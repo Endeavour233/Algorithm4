@@ -1,4 +1,4 @@
-package main.MSTandShortestPath.SSSP;
+package main.MSTandShortestPath.SP;
 
 
 import edu.princeton.cs.algs4.*;
@@ -7,8 +7,8 @@ import kotlin.Pair;
 public abstract class SSSP {
     protected final EdgeWeightedDigraph g;
     protected final int s;
-    protected double[] dist;
-    protected DirectedEdge[] edgeTo;
+    double[] dist;
+    DirectedEdge[] edgeTo;
     public SSSP(EdgeWeightedDigraph g, int s) {
         this.g = g;
         this.s = s;

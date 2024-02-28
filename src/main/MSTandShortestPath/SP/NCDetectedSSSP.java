@@ -1,4 +1,4 @@
-package main.MSTandShortestPath.SSSP;
+package main.MSTandShortestPath.SP;
 
 import edu.princeton.cs.algs4.DirectedEdge;
 import edu.princeton.cs.algs4.EdgeWeightedDigraph;

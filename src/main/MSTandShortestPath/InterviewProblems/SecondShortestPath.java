@@ -1,7 +1,7 @@
 package main.MSTandShortestPath.InterviewProblems;
 
 import edu.princeton.cs.algs4.*;
-import main.MSTandShortestPath.SSSP.DijkstraSSSP;
+import main.MSTandShortestPath.SP.DijkstraSSSP;
 
 import java.util.HashMap;
 import java.util.HashSet;
