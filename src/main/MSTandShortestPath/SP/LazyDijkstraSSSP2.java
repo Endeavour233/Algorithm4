@@ -61,8 +61,8 @@ public class LazyDijkstraSSSP2 extends SSSP {
                 // then e will be ignored.
                 dist[to] = newDist;
                 edgeTo[to] = e;
-                // because there is no negative edges, dist[u = e.from()] won't change after e is inserted into pq.
-                // pq's comparator is ensured to perform normally.
+                // dist[u] is assigned a value only once(when u is from unmarked to marked)
+                // after e is inserted to pq, dist[u] won't change anymore and pq's comparator is ensured to perform normally
                 pq.add(e);
             }
         }
