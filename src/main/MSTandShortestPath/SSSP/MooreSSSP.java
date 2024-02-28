@@ -3,6 +3,7 @@ package main.MSTandShortestPath.SSSP;
 import edu.princeton.cs.algs4.DirectedEdge;
 import edu.princeton.cs.algs4.EdgeWeightedDigraph;
 import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.StdOut;
 import kotlin.Pair;
 
 
@@ -13,7 +14,7 @@ public class MooreSSSP extends NCDetectedSSSP {
     }
     @Override
     protected void compute() {
-        if (negativeCycle != null) reportCycle(negativeCycle);
+        checkCycle();
         if (dist != null) return;
         dist = new double[g.V()];
         edgeTo = new DirectedEdge[g.V()];
@@ -41,7 +42,7 @@ public class MooreSSSP extends NCDetectedSSSP {
                         edgeTo[v] = edge;
                         if (phase == g.V()) {
                             // find tense edge in V phase, there is a negative cycle
-                            negativeCycle = findCycle(edgeTo, v);
+                            findCycle(edgeTo, v);
                             break Outer;
                         }
                         if (!inqueue[v]) {
@@ -52,12 +53,22 @@ public class MooreSSSP extends NCDetectedSSSP {
                 }
             }
         }
-        if (negativeCycle != null) reportCycle(negativeCycle);
+        checkCycle();
     }
 
     public static void main(String[] args) {
         Pair<EdgeWeightedDigraph, Integer> params = parseGraph(args);
-        unitTest(new MooreSSSP(params.getFirst(), params.getSecond()), params.getFirst(), params.getSecond());
+        MooreSSSP sssp = new MooreSSSP(params.getFirst(), params.getSecond());
+        Iterable<DirectedEdge> nc = sssp.getNegativeCycle();
+        if (nc != null) {
+            StdOut.println("negative cycle detected: ");
+            for (DirectedEdge edge:nc) {
+                StdOut.println(edge);
+            }
+        } else {
+            unitTest(sssp, params.getFirst(), params.getSecond());
+        }
+        //unitTest(sssp, params.getFirst(), params.getSecond());
     }
 
 }

@@ -12,16 +12,27 @@ abstract public class NCDetectedSSSP extends SSSP {
         super(g, s);
     }
 
-    protected void reportCycle(Iterable<DirectedEdge> cycle) {
+    public Iterable<DirectedEdge> getNegativeCycle() {
+        try {
+            compute();
+        } catch (IllegalArgumentException e) {
+
+        }
+        assert dist != null;
+        return negativeCycle;
+    }
+
+    protected void checkCycle() {
+        if (negativeCycle == null) return;
         StringBuilder sb = new StringBuilder("there is negative cycle: \n");
-        for (DirectedEdge e:cycle) {
+        for (DirectedEdge e:negativeCycle) {
             sb.append(e);
             sb.append("\n");
         }
         throw new IllegalArgumentException(sb.toString());
     }
 
-    protected Iterable<DirectedEdge> findCycle(DirectedEdge[] edgeTo, int v) {
+    protected void findCycle(DirectedEdge[] edgeTo, int v) {
         Stack<DirectedEdge> cycle = new Stack<>();
         int slow = edgeTo[v].from();
         int fast = edgeTo[slow].from();
@@ -39,6 +50,6 @@ abstract public class NCDetectedSSSP extends SSSP {
             cycle.push(e);
             slow = e.from();
         } while (slow != fast);
-        return cycle;
+        negativeCycle = cycle;
     }
 }

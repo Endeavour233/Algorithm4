@@ -3,11 +3,11 @@ package main.MSTandShortestPath.SSSP;
 
 import edu.princeton.cs.algs4.DirectedEdge;
 import edu.princeton.cs.algs4.EdgeWeightedDigraph;
+import edu.princeton.cs.algs4.StdOut;
 import kotlin.Pair;
 
 public class BellmanSSSP extends NCDetectedSSSP {
 
-    private Iterable<DirectedEdge> negativeCycle;
 
     public BellmanSSSP(EdgeWeightedDigraph g, int s) {
         super(g, s);
@@ -15,9 +15,7 @@ public class BellmanSSSP extends NCDetectedSSSP {
 
     @Override
     protected void compute() {
-        if (negativeCycle != null) {
-            reportCycle(negativeCycle);
-        }
+        checkCycle();
         if (dist != null) return;
         dist = new double[g.V()];
         edgeTo = new DirectedEdge[g.V()];
@@ -40,7 +38,7 @@ public class BellmanSSSP extends NCDetectedSSSP {
                     dist[v] = newDist;
                     edgeTo[v] = edge;
                     if (iter == g.V()) {
-                        negativeCycle = findCycle(edgeTo, v);
+                        findCycle(edgeTo, v);
                         break Outer;
                     } else {
                         relaxed = true;
@@ -51,11 +49,20 @@ public class BellmanSSSP extends NCDetectedSSSP {
                 break;
             }
         }
-        if (negativeCycle != null) reportCycle(negativeCycle);
+        checkCycle();
     }
 
     public static void main(String[] args) {
         Pair<EdgeWeightedDigraph, Integer> params = parseGraph(args);
-        unitTest(new BellmanSSSP(params.getFirst(), params.getSecond()), params.getFirst(), params.getSecond());
+        BellmanSSSP sssp = new BellmanSSSP(params.getFirst(), params.getSecond());
+        Iterable<DirectedEdge> nc = sssp.getNegativeCycle();
+        if (nc != null) {
+            StdOut.println("negative cycle detected: ");
+            for (DirectedEdge edge:nc) {
+                StdOut.println(edge);
+            }
+        }
+        unitTest(sssp, params.getFirst(), params.getSecond());
+
     }
 }
