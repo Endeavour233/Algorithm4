@@ -115,7 +115,7 @@ public class LSD {
                 nums2[i] = nums1[i];
             }
             Arrays.sort(nums1);
-            sort(nums2);
+            LSD.sort(nums2);
             for (int i = 0; i < nums1.length; i ++) {
                 if (nums1[i] != nums2[i]) {
                     StdOut.print("wrong!");
@@ -132,7 +132,7 @@ public class LSD {
                 strs2[i] = strs[i];
             }
             Arrays.sort(strs);
-            sort(strs2, strs[0].length());
+            LSD.sort(strs2, strs[0].length());
             for (int i = 0; i < strs2.length; i ++) {
                 if (!strs[i].equals(strs2[i])) {
                     StdOut.print("wrong!");
