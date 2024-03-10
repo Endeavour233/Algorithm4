@@ -2,6 +2,7 @@ package main.String.Trie;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
+import kotlin.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +18,12 @@ public class RwayTrie<T> implements Trie<T> {
 
     private Node<T> root;
 
+    @Override
+    public void insert(String key, T value) {
+        if (value == null) throw new IllegalArgumentException("value can't be null!");
+        root = insert(root, key, 0, value);
+    }
+
     private Node<T> insert(Node<T> node, String key, int from, T value) {
         if (node == null) {
             node = new Node<>();
@@ -28,11 +35,17 @@ public class RwayTrie<T> implements Trie<T> {
         }
         return node;
     }
+
     @Override
-    public void insert(String key, T value) {
-        if (value == null) throw new IllegalArgumentException("value can't be null!");
-        root = insert(root, key, 0, value);
+    public T search(String key) {
+        Node<T> node = search(root, key, 0);
+        if (node == null) {
+            return null;
+        } else {
+            return node.value;
+        }
     }
+
     // find the node corresponds to key
     // the string from root to node is equal to key.substring(0, to)
     // to <= key.length
@@ -46,14 +59,46 @@ public class RwayTrie<T> implements Trie<T> {
     }
 
     @Override
-    public T search(String key) {
-        Node<T> node = search(root, key, 0);
-        if (node == null) {
-            return null;
-        } else {
-            return node.value;
-        }
+    public boolean delete(String key) {
+        Pair<Node<T>, Boolean> result = delete(root, key, 0);
+        root = result.getFirst();
+        return result.getSecond();
     }
+    // to <= key.length
+    // string from root to node is supposed to be equal to key.substring(0, to)
+    private Pair<Node<T>, Boolean> delete(Node node, String key, int to) {
+        if (node == null) return new Pair(node, false);
+        boolean deleted = false;
+        if (to == key.length()) {
+            if (node.value != null) {
+                node.value = null;
+                deleted = true;
+            } else {
+                return new Pair(node, false);
+            }
+        } else {
+            int targetInd = key.charAt(to) - 'a';
+            Pair<Node<T>, Boolean> result = delete(node.nexts[targetInd], key, to + 1);
+            node.nexts[targetInd] = result.getFirst();
+            deleted = result.getSecond();
+        }
+        if (node.value != null) return new Pair(node, deleted);
+        for (int i = 0; i < R; i ++) {
+            if (node.nexts[i] != null) {
+                return new Pair(node, deleted);
+            }
+        }
+        return new Pair(null, deleted);
+    }
+
+    @Override
+    public Iterable<String> keys() {
+        List<String> keys = new ArrayList<>();
+        if (root == null) return keys;
+        collectAll(root, "", keys);
+        return keys;
+    }
+
     // the string from root to node is supposed to be equal with curPrefix
     // node != null
     private void collectAll(Node<T> node, String curPrefix, List<String> container) {
@@ -68,13 +113,20 @@ public class RwayTrie<T> implements Trie<T> {
         }
     }
 
+
+    /**
+     * keys that match {@code s} which has wildcard
+     * @param s
+     * @return
+     */
     @Override
-    public Iterable<String> keys() {
-        List<String> keys = new ArrayList<>();
-        if (root == null) return keys;
-        collectAll(root, "", keys);
-        return keys;
+    public Iterable<String> keysThatMatch(String s) {
+        List<String> result = new ArrayList<>();
+        if (root == null) return result;
+        collectMatch(root, "", s, result);
+        return result;
     }
+
     // the string from root to node is supposed to be equal to curprefix
     // prefix.length <= str.length
     // prefix matches str.substring(0, prefix.length)
@@ -96,25 +148,11 @@ public class RwayTrie<T> implements Trie<T> {
             } else {
                 Node<T> targetNode = node.nexts[targetChr - 'a'];
                 if (targetNode != null) {
-                    collectMatch(targetNode, str.substring(0, prefix.length() + 1), str, container);
+                    collectMatch(targetNode, String.format("%s%s", prefix, targetChr), str, container);
                 }
             }
         }
     }
-
-    /**
-     * keys that match {@code s} which has wildcard
-     * @param s
-     * @return
-     */
-    @Override
-    public Iterable<String> keysThatMatch(String s) {
-        List<String> result = new ArrayList<>();
-        if (root == null) return result;
-        collectMatch(root, "", s, result);
-        return result;
-    }
-
 
     @Override
     public Iterable<String> keysWithPrefix(String prefix) {
@@ -124,6 +162,17 @@ public class RwayTrie<T> implements Trie<T> {
             collectAll(node, prefix, keys);
         }
         return keys;
+    }
+
+    @Override
+    public String longestPrefixOf(String query) {
+        if (root == null) return null;
+        int longest = longestMatch(root, query, 0, -1);
+        if (longest == -1) {
+            return null;
+        } else {
+            return query.substring(0, longest);
+        }
     }
 
     // the string from root to node is equal to query.substring(0, to)
@@ -138,13 +187,6 @@ public class RwayTrie<T> implements Trie<T> {
             }
         }
         return longest;
-    }
-
-    @Override
-    public String longestPrefixOf(String query) {
-        if (root == null) return "";
-        int longest = longestMatch(root, query, 0, 0);
-        return query.substring(0, longest);
     }
 
     public static void main(String[] args) {
@@ -192,5 +234,15 @@ public class RwayTrie<T> implements Trie<T> {
         }
         StdOut.println("test longestPrefixOf");
         StdOut.println(trie.longestPrefixOf(StdIn.readLine()));
+        StdOut.println("test delete -------------------------");
+        while (StdIn.hasNextLine()) {
+            String s = StdIn.readLine();
+            if (s.isEmpty()) break;
+            StdOut.println("delete " + s + " result: " + trie.delete(s));
+        }
+        StdOut.println("current keys in trie:");
+        for (String key:trie.keys()) {
+            StdOut.println(key);
+        }
     }
 }

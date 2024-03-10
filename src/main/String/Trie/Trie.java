@@ -1,14 +1,16 @@
 package main.String.Trie;
 
 public interface Trie<T> {
-    public void insert(String key, T value);
-    public T search(String key);
-    public Iterable<String> keys();
+    void insert(String key, T value);
+    T search(String key);
+    Iterable<String> keys();
 
-    public Iterable<String> keysThatMatch(String s);
+    Iterable<String> keysThatMatch(String s);
 
 
-    public Iterable<String> keysWithPrefix(String prefix);
+    Iterable<String> keysWithPrefix(String prefix);
     // longest string in trie that is a prefix of query
-    public String longestPrefixOf(String query);
+    String longestPrefixOf(String query);
+
+    boolean delete(String key);
 }
