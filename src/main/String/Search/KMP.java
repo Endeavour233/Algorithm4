@@ -7,13 +7,13 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KMP {
+public class KMP extends SubstringSearch {
     public static final int R = 1 << 8;
     private int[][] dfa;
     private final int n;
     public KMP(String pattern) {
+        super(pattern);
         n = pattern.length();
-        if  (n == 0) throw new IllegalArgumentException("pattern can't be an empty string!");
         dfa = new int [R][n];
         // build dfa
         int x = 0;
@@ -26,13 +26,7 @@ public class KMP {
             x = dfa[pattern.charAt(j)][x];
         }
     }
-
-    /**
-     * search pattern in {@code str}, return a list of index s.t. str.substring(index, index + patten length) == pattern
-     * @param str
-     * @return a list of index s.t. str.substring(index, index + patten length) == pattern if there is such a match;
-     *         otherwise, return {@code null}
-     */
+    @Override
     public Iterable<Integer> searchIn(String str) {
         List<Integer> result = new ArrayList<>();
         int matched = 0;
