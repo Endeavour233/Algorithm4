@@ -5,6 +5,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Random;
 
 public class ManberMeyerSuffixSort {
 
@@ -12,7 +13,6 @@ public class ManberMeyerSuffixSort {
     private ManberMeyerSuffixSort() {
 
     }
-
 
 
     private static class SuffixComparator implements Comparator<Integer> {
@@ -105,24 +105,36 @@ public class ManberMeyerSuffixSort {
 
     public static void main(String[] args) {
         while (StdIn.hasNextLine()) {
-            String str = StdIn.readLine();
-            if (str.isEmpty()) break;
-            String[] suffixStr1 = new String[str.length()];
+            String num = StdIn.readLine();
+            if (num.isEmpty()) break;
+            long n = Long.valueOf(num);
+            Random r = new Random();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < n; i ++) {
+                sb.append((char) r.nextInt(256));
+            }
+            String str = sb.toString();
+            Integer[] suffixStr1 = new Integer[str.length()];
             for (int i = 0; i < str.length(); i ++) {
-                suffixStr1[i] = str.substring(i);
+                suffixStr1[i] = i;
             }
-            Arrays.sort(suffixStr1);
+            long time = System.nanoTime();
+            Arrays.sort(suffixStr1, new Comparator<Integer>() {
+                @Override
+                public int compare(Integer o1, Integer o2) {
+                    return str.substring(o1).compareTo(str.substring(o2));
+                }
+            });
+            System.out.println("array sort consume: " + (System.nanoTime() - time));
+            time = System.nanoTime();
             int[] suffix = ManberMeyerSuffixSort.getSortedSuffixArray(str);
-            String[] suffixStr2 = new String[suffix.length];
-            for (int i = 0; i < suffix.length; i ++) {
-                suffixStr2[i] = str.substring(suffix[i]);
-            }
+            System.out.println("manberMeyser consume: " + (System.nanoTime() - time));
             boolean correct = true;
-            for (int i = 0; i < suffixStr2.length; i ++) {
-                if (suffixStr1[i].equals(suffixStr2[i])) {
-                    StdOut.println(suffixStr2[i]);
+            for (int i = 0; i < suffix.length; i ++) {
+                if (suffixStr1[i] == suffix[i]) {
+                    StdOut.println(str.substring(suffix[i]));
                 } else {
-                    StdOut.println("system: " + suffixStr1[i] + " my: " + suffixStr2[i]);
+                    StdOut.println("system: " + suffixStr1[i] + " my: " + suffix[i]);
                 }
             }
             if (!correct) {
